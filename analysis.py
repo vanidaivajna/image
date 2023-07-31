@@ -25,3 +25,38 @@ if __name__ == "__main__":
     
     # Save the DataFrame to a CSV file
     df.to_csv("file_counts.csv", index=False)
+#------------------------------
+
+import os
+import pandas as pd
+import PyPDF2
+
+def count_files_and_pages_in_folder(folder_path):
+    file_info = []
+    for filename in os.listdir(folder_path):
+        if filename.endswith(".pdf"):
+            file_path = os.path.join(folder_path, filename)
+
+            # Count the number of pages in the PDF
+            with open(file_path, 'rb') as file:
+                pdf_reader = PyPDF2.PdfFileReader(file)
+                num_pages = pdf_reader.numPages
+
+            file_info.append((filename, num_pages))
+    return file_info
+
+if __name__ == "__main__":
+    folder_path = "path/to/your/pdf/folder"
+    file_info = count_files_and_pages_in_folder(folder_path)
+
+    # Create a pandas DataFrame
+    df = pd.DataFrame(file_info, columns=["File Name", "Number of Pages"])
+
+    # Add a new column for file count
+    df["File Count"] = len(df)
+
+    # Display the DataFrame
+    print(df)
+
+    # Save the DataFrame to a CSV file
+    df.to_csv("pdf_info.csv", index=False)
